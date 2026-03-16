@@ -295,12 +295,7 @@ export function syncComorbsToPMH() {
     activeKeys.forEach(k => {
         if (k === 'comorb_other') {
             const specVal = $('comorb_other_note')?.value.trim();
-            if (specVal) {
-                specVal.split(/[\n,]+/).forEach(v => {
-                    const trimmed = v.trim();
-                    if (trimmed) chipLines.push(trimmed);
-                });
-            }
+            if (specVal) chipLines.push(specVal);
         } else {
             chipLines.push(comorbMap[k]);
         }
@@ -308,19 +303,14 @@ export function syncComorbsToPMH() {
 
     const filterLower = Object.values(comorbMap).map(n => n.toLowerCase());
     const otherVal = $('comorb_other_note')?.value.trim();
-    if (otherVal) {
-        otherVal.split(/[\n,]+/).forEach(v => {
-            const trimmed = v.trim();
-            if (trimmed) filterLower.push(trimmed.toLowerCase());
-        });
-    }
+    if (otherVal) filterLower.push(otherVal.toLowerCase());
 
-    const userLines = noteEl.value.split('\n').filter(line => {
+    const userLines = noteEl.value.split('\\n').filter(line => {
         const trimmed = line.trim();
         return trimmed && !filterLower.includes(trimmed.toLowerCase());
     });
 
-    noteEl.value = [...chipLines, ...userLines].join('\n');
+    noteEl.value = [...chipLines, ...userLines].join('\\n');
     _syncingPMH = false;
 }
 
@@ -398,7 +388,7 @@ export function clearData() {
     const listEl = $('flagList'); if (listEl) listEl.innerHTML = '';
     const sum = $('summary'); if (sum) sum.value = '';
 
-    const orReason = $('override_reason_box'); if (orReason) orReason.style.display = 'none';
+    const orReason = $('override_reason_box'); if(orReason) orReason.style.display = 'none';
     $('override_amber')?.classList.remove('active');
     $('override_red')?.classList.remove('active');
 
