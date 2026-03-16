@@ -420,7 +420,7 @@ Robert Adams,889977,17,70,7C,743,Post-op Fracture,2026-03-14,Afternoon,,,,,,,,,,
                     <td>
                         <span class="patient-name">${p.raw.PatientName}</span>
                         <span class="patient-urn">URN: A1234567</span>
-                        <span style="font-size:0.8rem; color:var(--muted); display:block; margin-top:4px;">K: ${p.raw.K || '--'} | Mg: ${p.raw.Mg || '--'}</span>
+
                     </td>
                     <td><span style="font-size: 0.9rem; color: var(--muted); display: block; max-width: 200px; line-height: 1.3;">${p.raw.ICUAdmissionReason}</span></td>
                     <td><span class="location-bubble">${p.raw.Location} / ${p.raw.Room}</span></td>
@@ -434,7 +434,7 @@ Robert Adams,889977,17,70,7C,743,Post-op Fracture,2026-03-14,Afternoon,,,,,,,,,,
                     <td>
                         <span class="patient-name">${p.raw.PatientName}</span>
                         <span class="patient-urn">URN: A1234567</span>
-                        <span style="font-size:0.8rem; color:var(--muted); display:block; margin-top:4px;">K: ${p.raw.K || '--'} | Mg: ${p.raw.Mg || '--'}</span>
+
                     </td>
                     <td><span style="font-size: 0.9rem; color: var(--muted); display: block; max-width: 200px; line-height: 1.3;">${p.raw.ICUAdmissionReason}</span></td>
                     <td><span class="location-bubble">${p.raw.Location} / ${p.raw.Room}</span></td>
