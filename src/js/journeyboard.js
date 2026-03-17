@@ -361,17 +361,15 @@ Robert Adams,889977,17,70,7C,743,Post-op Fracture,2026-03-14,Afternoon,,,,,,,,,,
             const parts = dateStr.split('-');
             if (parts.length !== 3) return 0;
             const [y, m, d] = parts;
-            const hour = timeMap[timeStr] || 12;
-            
-            // DEMO MODE: If the date is in March 2026, shift it to be relative to today.
-            // This ensures the "Last 72 Hours" demo data always looks current.
+            // DEMO MODE: Shift hardcoded March 2026 dates to be relative to "Now"
+            // This ensures every patient maintains their exact "Time on Ward" forever.
             let stepdownDateTime = new Date(y, m - 1, d, hour);
             const now = new Date();
             
-            const demoReferenceDate = new Date(2026, 2, 16, 12); // March 16, 2026
+            const demoReferenceDate = new Date(2026, 2, 16, 12); // March 16, 2026, 12:00
             if (stepdownDateTime.getFullYear() === 2026 && stepdownDateTime.getMonth() === 2) {
-                const daysOffset = Math.floor((now - demoReferenceDate) / (1000 * 60 * 60 * 24));
-                stepdownDateTime.setDate(stepdownDateTime.getDate() + daysOffset);
+                const timeOffsetMs = now.getTime() - demoReferenceDate.getTime();
+                stepdownDateTime = new Date(stepdownDateTime.getTime() + timeOffsetMs);
             }
 
             const diffMs = now - stepdownDateTime;
