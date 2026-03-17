@@ -108,7 +108,32 @@ Robert Adams,889977,17,70,7C,743,Post-op Fracture,2026-03-14,Afternoon,,,,,,,,,,
     let wardPatients = [];
 
     function processData(data) {
+        const now = new Date();
+        const demoReferenceDate = new Date(2026, 2, 16, 12); // March 16, 2026, 12:00
+        const timeOffsetMs = now.getTime() - demoReferenceDate.getTime();
+
         let allProcessed = data.map(row => {
+            // DEMO MODE: Shift hardcoded March 2026 dates to be relative to "Now"
+            // We do this early so mappedState and calculateHoursOnWard both get shifted dates.
+            if (row.StepdownDate && row.StepdownDate.startsWith('2026-03')) {
+                try {
+                    const parts = row.StepdownDate.split('-');
+                    if (parts.length === 3) {
+                        const [y, m, d] = parts;
+                        const timeMap = { 'Morning': 9, 'Afternoon': 15, 'Evening': 18, 'Night': 21 };
+                        const hour = timeMap[row.StepdownTime] || 12;
+                        let dObj = new Date(y, m - 1, d, hour);
+                        
+                        dObj = new Date(dObj.getTime() + timeOffsetMs);
+                        
+                        const ny = dObj.getFullYear();
+                        const nm = String(dObj.getMonth() + 1).padStart(2, '0');
+                        const nd = String(dObj.getDate()).padStart(2, '0');
+                        row.StepdownDate = `${ny}-${nm}-${nd}`;
+                    }
+                } catch (e) {}
+            }
+
             const isICU = row.Location && row.Location.toLowerCase().includes('icu');
             const hasObs = row.RR || row.HR || row.SBP;
 
@@ -362,17 +387,8 @@ Robert Adams,889977,17,70,7C,743,Post-op Fracture,2026-03-14,Afternoon,,,,,,,,,,
             if (parts.length !== 3) return 0;
             const [y, m, d] = parts;
             const hour = timeMap[timeStr] || 12;
-            // DEMO MODE: Shift hardcoded March 2026 dates to be relative to "Now"
-            // This ensures every patient maintains their exact "Time on Ward" forever.
-            let stepdownDateTime = new Date(y, m - 1, d, hour);
+            const stepdownDateTime = new Date(y, m - 1, d, hour);
             const now = new Date();
-            
-            const demoReferenceDate = new Date(2026, 2, 16, 12); // March 16, 2026, 12:00
-            if (stepdownDateTime.getFullYear() === 2026 && stepdownDateTime.getMonth() === 2) {
-                const timeOffsetMs = now.getTime() - demoReferenceDate.getTime();
-                stepdownDateTime = new Date(stepdownDateTime.getTime() + timeOffsetMs);
-            }
-
             const diffMs = now - stepdownDateTime;
             return Math.max(0, Math.floor(diffMs / (1000 * 60 * 60)));
         } catch (e) { return 0; }
